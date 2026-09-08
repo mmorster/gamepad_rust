@@ -1,0 +1,7 @@
+[package]
+name = "gamepad_rust"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+gamepads = "0.1.7"
