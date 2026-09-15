@@ -1,36 +1,24 @@
 use gamepads::{Button, Gamepads};
+use rusqlite::{Connection};
 
 fn main() {
     let mut gamepads = Gamepads::new();
-
+    let conn = Connection::open("mcrtfa.db3")?;
+    let pocitadlo = 0;
     loop {
         gamepads.poll();
-
         for gamepad in gamepads.all() {
             // Use just_pressed_buttons() or currently_pressed_buttons().
             for button in gamepad.all_just_pressed() {
-                println!("Button just pressed: {button:?}");
-                match button {
-                    Button::DPadUp => println!("Going up!"),
-                    Button::ActionDown => println!("Shooting!"),
-                    _ => {}
-                }
-
                 // Individual buttons can be checked using
                 // is_just_pressed() / is_currently_pressed():
-                if gamepad.is_currently_pressed(Button::FrontLeftLower) {
-                    println!("Front left lower button is currently pressed");
+                if gamepad.is_currently_pressed(Button::ActionDown) {
+                    conn.execute("UPDATE button_press SET press_counter = ?1", (pocitadlo,))?;
+                    pocitadlo += 1;
+                    std::thread::sleep(std::time::Duration::from_millis(300));
                 }
             }
-
-            if gamepad.left_stick() != (0., 0.) {
-                println!("Left stick: {:?}", gamepad.left_stick());
-            }
-            if gamepad.right_stick() != (0., 0.) {
-                println!("Right stick: {:?}", gamepad.right_stick());
-            }
         }
-
-        std::thread::sleep(std::time::Duration::from_millis(500));
+        std::thread::sleep(std::time::Duration::from_millis(200));
     }
 }

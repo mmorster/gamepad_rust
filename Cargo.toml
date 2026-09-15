@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 gamepads = "0.1.7"
+rusqlite = { version = "0.40.1", features = ["bundled"] }
