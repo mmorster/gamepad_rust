@@ -3,8 +3,9 @@ use rusqlite::{Connection};
 
 fn main() {
     let mut gamepads = Gamepads::new();
-    let conn = Connection::open("mcrtfa.db3")?;
-    let pocitadlo = 0;
+    let dbconn: Connection;
+    let conn = Connection::open("mcrtfa.db3");
+    let mut pocitadlo = 0;
     loop {
         gamepads.poll();
         for gamepad in gamepads.all() {
@@ -13,7 +14,8 @@ fn main() {
                 // Individual buttons can be checked using
                 // is_just_pressed() / is_currently_pressed():
                 if gamepad.is_currently_pressed(Button::ActionDown) {
-                    conn.execute("UPDATE button_press SET press_counter = ?1", (pocitadlo,))?;
+                    println!("Stisknuto tlacitko");
+                    //conn.execute("UPDATE button_press SET press_counter = ?1", (pocitadlo,))?;
                     pocitadlo += 1;
                     std::thread::sleep(std::time::Duration::from_millis(300));
                 }
